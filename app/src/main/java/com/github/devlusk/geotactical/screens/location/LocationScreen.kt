@@ -40,7 +40,7 @@ fun LocationScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            PositionOptions({})
+            PositionOptions(false, {}, {}) // TODO: More shit to do
 
             Spacer(modifier = Modifier.height(16.dp))
 

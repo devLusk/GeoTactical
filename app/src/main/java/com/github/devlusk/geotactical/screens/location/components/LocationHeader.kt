@@ -45,7 +45,7 @@ fun LocationHeader(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.settings_icon),
-                    contentDescription = null
+                    contentDescription = "Settings"
                 )
             }
         }

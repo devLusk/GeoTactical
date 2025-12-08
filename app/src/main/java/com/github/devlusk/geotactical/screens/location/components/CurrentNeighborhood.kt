@@ -26,7 +26,6 @@ fun CurrentNeighborhood(
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = Color(0xFFFDC62E),
-        tonalElevation = 6.dp,
         shadowElevation = 6.dp
     ) {
         Column(
@@ -41,24 +40,15 @@ fun CurrentNeighborhood(
                 style = MaterialTheme.typography.bodyMedium,
                 fontStyle = FontStyle.Normal,
                 fontWeight = FontWeight.Bold
-
             )
 
             Spacer(Modifier.height(6.dp))
 
-            if (address.isNotEmpty()) {
-                Text(
-                    text = address.uppercase(),
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold
-                )
-            } else {
-                Text(
-                    text = "AWAITING DATA...",
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Text(
+                text = if (address.isNotEmpty()) address.uppercase() else "AWAITING DATA...",
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

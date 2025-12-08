@@ -29,16 +29,16 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PositionOptions(
+    isTracking: Boolean,
+    onTrackingChange: (Boolean) -> Unit,
     onGetPositionClick: () -> Unit
 ) {
-    var checked by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Button(
             onClick = onGetPositionClick,
-            enabled = !checked,
+            enabled = !isTracking,
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF2B6CB0)
@@ -48,7 +48,7 @@ fun PositionOptions(
                 .height(60.dp)
         ) {
             Text(
-                text = if (!checked) "GET CURRENT POSITION" else "CONSTANT TRACKING ACTIVATE",
+                text = if (!isTracking) "GET CURRENT POSITION" else "CONSTANT TRACKING ACTIVATE",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -75,10 +75,8 @@ fun PositionOptions(
                 )
 
                 Switch(
-                    checked = checked,
-                    onCheckedChange = {
-                        checked = it
-                    },
+                    checked = isTracking,
+                    onCheckedChange = onTrackingChange,
                     modifier = Modifier.scale(0.8f)
                 )
             }
@@ -89,5 +87,5 @@ fun PositionOptions(
 @Preview(showBackground = true)
 @Composable
 private fun PositionOptionsPreview() {
-    PositionOptions({})
+    PositionOptions(isTracking = false, onTrackingChange = {}, onGetPositionClick = {})
 }
