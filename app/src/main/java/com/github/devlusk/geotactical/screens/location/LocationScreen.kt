@@ -1,11 +1,9 @@
 package com.github.devlusk.geotactical.screens.location
 
 import android.Manifest
-import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,14 +37,16 @@ fun LocationScreen(
 ) {
     val context = LocalContext.current
 
+    // Permissions launcher
     val permissionRequestLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { permission ->
+    ) { permissions ->
+
         val isCoarsePermissionGranted =
-            permission[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
 
         val isFinePermissionGranted =
-            permission[Manifest.permission.ACCESS_FINE_LOCATION] == true
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
 
         if (isCoarsePermissionGranted || isFinePermissionGranted) {
             Log.d("GeoTactical", "Debug: Location Permission Granted")
@@ -61,23 +61,19 @@ fun LocationScreen(
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
 
-            if (shouldShowRationale) {
-                Toast.makeText(
-                    context,
-                    "Location permission is required to use this app",
-                    Toast.LENGTH_LONG
-                ).show()
+            val message = if (shouldShowRationale) {
+                "Location permission is required to use this app"
             } else {
-                Toast.makeText(
-                    context,
-                    "You can enable location permission later in Settings",
-                    Toast.LENGTH_LONG
-                ).show()
+                "You can enable location permission later in Settings"
             }
+
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }
 
+    // Dialogue control
     var showPermissionDialog by remember { mutableStateOf(!locationUtils.hasLocationPermission()) }
+
     if (showPermissionDialog) {
         PermissionInfoDialog(
             onConfirm = {
@@ -89,18 +85,13 @@ fun LocationScreen(
                     )
                 )
             },
-            onCancel = {
-                showPermissionDialog = false
-                Toast.makeText(
-                    context,
-                    "You can enable location permission later in Settings",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            onCancel = { showPermissionDialog = false }
         )
     }
 
+    // Main UI
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+
         Column(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
@@ -108,7 +99,6 @@ fun LocationScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-
             LocationHeader({}) // TODO: Add navigation to configurations
 
             Spacer(modifier = Modifier.height(16.dp))

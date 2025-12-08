@@ -48,7 +48,7 @@ fun PositionOptions(
                 .height(60.dp)
         ) {
             Text(
-                text = if (!isTracking) "GET CURRENT POSITION" else "CONSTANT TRACKING ACTIVATE",
+                text = if (!isTracking) "GET CURRENT POSITION" else "TRACKING ACTIVATE",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
