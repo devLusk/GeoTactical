@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.devlusk.geotactical.screens.location.components.CurrentNeighborhood
 import com.github.devlusk.geotactical.screens.location.components.LocationHeader
+import com.github.devlusk.geotactical.screens.location.components.PositionOptions
 
 @Composable
 fun LocationScreen() {
@@ -28,11 +29,11 @@ fun LocationScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CurrentNeighborhood("Alto da Serra")
+            CurrentNeighborhood("")
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
+            PositionOptions({})
         }
     }
 }

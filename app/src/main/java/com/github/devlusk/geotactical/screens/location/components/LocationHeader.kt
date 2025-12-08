@@ -25,7 +25,7 @@ fun LocationHeader(
 ) {
     Surface(
         shadowElevation = 3.dp,
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

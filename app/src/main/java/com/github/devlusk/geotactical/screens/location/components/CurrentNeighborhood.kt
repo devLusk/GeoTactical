@@ -20,9 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CurrentNeighborhood(address: String) {
+fun CurrentNeighborhood(
+    address: String
+) {
     Surface(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         color = Color(0xFFFDC62E),
         tonalElevation = 6.dp,
         shadowElevation = 6.dp
@@ -44,11 +46,19 @@ fun CurrentNeighborhood(address: String) {
 
             Spacer(Modifier.height(6.dp))
 
-            Text(
-                text = address.uppercase(),
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold
-            )
+            if (address.isNotEmpty()) {
+                Text(
+                    text = address.uppercase(),
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold
+                )
+            } else {
+                Text(
+                    text = "AWAITING DATA...",
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
