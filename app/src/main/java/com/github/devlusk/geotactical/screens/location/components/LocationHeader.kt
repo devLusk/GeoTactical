@@ -25,6 +25,7 @@ fun LocationHeader(
 ) {
     Surface(
         shadowElevation = 3.dp,
+        tonalElevation = 3.dp,
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(

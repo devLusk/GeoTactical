@@ -2,7 +2,6 @@ package com.github.devlusk.geotactical.screens.location
 
 import android.Manifest
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -21,21 +20,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import com.github.devlusk.geotactical.MainActivity
 import com.github.devlusk.geotactical.data.location.LocationUtils
-import com.github.devlusk.geotactical.screens.PermissionInfoDialog
 import com.github.devlusk.geotactical.screens.location.components.CurrentNeighborhood
 import com.github.devlusk.geotactical.screens.location.components.LocationDetails
 import com.github.devlusk.geotactical.screens.location.components.LocationHeader
 import com.github.devlusk.geotactical.screens.location.components.MapPlaceholder
+import com.github.devlusk.geotactical.screens.location.components.PermissionDeniedState
 import com.github.devlusk.geotactical.screens.location.components.PositionOptions
+import com.github.devlusk.geotactical.screens.permission.PermissionInfoDialog
 
 @Composable
 fun LocationScreen(
     locationUtils: LocationUtils
 ) {
-    val context = LocalContext.current
+    var hasPermission by remember { mutableStateOf(locationUtils.hasLocationPermission()) }
 
     // Permissions launcher
     val permissionRequestLauncher = rememberLauncherForActivityResult(
@@ -48,26 +46,10 @@ fun LocationScreen(
         val isFinePermissionGranted =
             permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
 
-        if (isCoarsePermissionGranted || isFinePermissionGranted) {
-            Log.d("GeoTactical", "Debug: Location Permission Granted")
-        } else {
-            val shouldShowRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    context as MainActivity,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
+        hasPermission = isCoarsePermissionGranted || isFinePermissionGranted
 
-            val message = if (shouldShowRationale) {
-                "Location permission is required to use this app"
-            } else {
-                "You can enable location permission later in Settings"
-            }
-
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        if (!hasPermission) {
+            Log.d("GeoTactical", "Debug: Location Permission Denied")
         }
     }
 
@@ -85,8 +67,25 @@ fun LocationScreen(
                     )
                 )
             },
-            onCancel = { showPermissionDialog = false }
+            onCancel = {
+                showPermissionDialog = false
+                hasPermission = false
+            }
         )
+    }
+
+    if (!hasPermission && !showPermissionDialog) {
+        PermissionDeniedState(
+            onAllowButton = {
+                permissionRequestLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                )
+            }
+        )
+        return
     }
 
     // Main UI
