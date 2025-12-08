@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.github.devlusk.geotactical.screens.location.components.CurrentNeighborhood
 import com.github.devlusk.geotactical.screens.location.components.LocationDetails
 import com.github.devlusk.geotactical.screens.location.components.LocationHeader
+import com.github.devlusk.geotactical.screens.location.components.MapPlaceholder
 import com.github.devlusk.geotactical.screens.location.components.PositionOptions
 
 @Composable
@@ -31,6 +32,10 @@ fun LocationScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            MapPlaceholder()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             CurrentNeighborhood("") // TODO: Pass current neighborhood
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -42,7 +47,7 @@ fun LocationScreen() {
             LocationDetails(
                 latitude = "-22.7554",
                 longitude = "-47.0094",
-                fullAddress = "Av. Principal, 100 - Centro, Cidade XP",
+                fullAddress = "Main Avenue, Downtown, City XP",
                 status = "Click \"GET CURRENT POSITION\" or enable tracking."
             )
         }
