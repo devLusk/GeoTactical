@@ -17,9 +17,12 @@ fun LocationScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(top = 16.dp)
+                .padding(16.dp)
         ) {
+
             LocationHeader({}) // TODO: Add navigation to configurations
+
+
         }
     }
 }
