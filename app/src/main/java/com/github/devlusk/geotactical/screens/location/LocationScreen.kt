@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.devlusk.geotactical.data.location.LocationUtils
+import com.github.devlusk.geotactical.data.model.LocationData
 import com.github.devlusk.geotactical.screens.location.components.CurrentNeighborhood
 import com.github.devlusk.geotactical.screens.location.components.LocationDetails
 import com.github.devlusk.geotactical.screens.location.components.LocationHeader
@@ -30,9 +31,14 @@ import com.github.devlusk.geotactical.screens.location.components.PositionOption
 import com.github.devlusk.geotactical.screens.permission.PermissionInfoDialog
 
 @Composable
-fun LocationScreen(
-    locationUtils: LocationUtils
-) {
+fun LocationScreen(locationUtils: LocationUtils) {
+    val context = LocalContext.current
+    var currentLocation by remember { mutableStateOf<LocationData?>(null) }
+    var currentAddress by remember { mutableStateOf("-") }
+    var currentNeighborhood by remember { mutableStateOf("") }
+    var isTracking by remember { mutableStateOf(false) }
+
+
     var hasPermission by remember { mutableStateOf(locationUtils.hasLocationPermission()) }
 
     // Permissions launcher
@@ -88,6 +94,29 @@ fun LocationScreen(
         return
     }
 
+    // Position Functions
+    fun getPosition() {
+        locationUtils.getCurrentLocation {location ->
+            currentLocation = location
+            currentAddress = locationUtils.reverseGeocodeLocation(location)
+            currentNeighborhood = locationUtils.getNeighborhood(location)
+        }
+    }
+
+    fun toggleTracking() {
+        if (isTracking) {
+            locationUtils.stopLocationUpdates()
+            isTracking = false
+        } else {
+            locationUtils.startLocationUpdates {location ->
+                currentLocation = location
+                currentAddress = locationUtils.reverseGeocodeLocation(location)
+                currentNeighborhood = locationUtils.getNeighborhood(location)
+            }
+            isTracking = true
+        }
+    }
+
     // Main UI
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
@@ -106,19 +135,27 @@ fun LocationScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CurrentNeighborhood("") // TODO: Pass current neighborhood
+            CurrentNeighborhood(currentNeighborhood)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            PositionOptions(false, {}, {}) // TODO: More shit to do
+            PositionOptions(
+                isTracking = isTracking,
+                onTrackingChange = { toggleTracking() },
+                onGetPositionClick = { getPosition() }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             LocationDetails(
-                latitude = "-22.7554",
-                longitude = "-47.0094",
-                fullAddress = "Main Avenue, Downtown, City XP",
-                status = "Click \"GET CURRENT POSITION\" or enable tracking."
+                latitude = currentLocation?.latitude?.toString() ?: "-",
+                longitude = currentLocation?.longitude?.toString() ?: "-",
+                fullAddress = currentAddress,
+                status = when {
+                    isTracking -> "Tracking active"
+                    currentLocation != null -> "Position obtained"
+                    else -> "Click to get position"
+                }
             )
         }
     }

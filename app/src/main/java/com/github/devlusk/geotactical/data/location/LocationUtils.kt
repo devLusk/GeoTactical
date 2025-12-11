@@ -71,6 +71,19 @@ class LocationUtils(val context: Context) {
         }
     }
 
+    fun getNeighborhood(locationData: LocationData): String {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses = geocoder.getFromLocation(
+            locationData.latitude,
+            locationData.longitude,
+            1
+        )
+
+        return addresses?.firstOrNull()?.let { address ->
+            address.subLocality ?: address.locality ?: "Unknown"
+        } ?: "Unknown"
+    }
+
     fun stopLocationUpdates() {
         locationCallback?.let {
             fusedLocationCliente.removeLocationUpdates(it)
