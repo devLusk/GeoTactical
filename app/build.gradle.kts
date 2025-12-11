@@ -58,6 +58,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // Material Components
+    // More Dependencies
     implementation(libs.material)
+    implementation(libs.play.services.location)
 }
