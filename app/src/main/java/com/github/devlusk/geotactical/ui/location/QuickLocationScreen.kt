@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.devlusk.geotactical.data.model.LocationData
+import com.github.devlusk.geotactical.data.model.UserLocation
 import com.github.devlusk.geotactical.screens.location.components.PermissionDeniedState
 import com.github.devlusk.geotactical.ui.location.components.CurrentNeighborhood
 import com.github.devlusk.geotactical.ui.location.components.LocationDetails
@@ -28,15 +28,15 @@ import com.github.devlusk.geotactical.ui.location.components.LocationHeader
 import com.github.devlusk.geotactical.ui.location.components.MapPlaceholder
 import com.github.devlusk.geotactical.ui.location.components.PositionOptions
 import com.github.devlusk.geotactical.ui.permission.PermissionInfoDialog
-import com.github.devlusk.geotactical.util.LocationUtils
+import com.github.devlusk.geotactical.util.LocationManager
 
 @Composable
-fun LocationScreen(locationUtils: LocationUtils) {
-    var currentLocation by remember { mutableStateOf<LocationData?>(null) }
+fun LocationScreen(locationManager: LocationManager) {
+    var currentLocation by remember { mutableStateOf<UserLocation?>(null) }
     var currentAddress by remember { mutableStateOf("-") }
     var currentNeighborhood by remember { mutableStateOf("") }
     var isTracking by remember { mutableStateOf(false) }
-    var hasPermission by remember { mutableStateOf(locationUtils.hasLocationPermission()) }
+    var hasPermission by remember { mutableStateOf(locationManager.hasLocationPermission()) }
 
     // Permissions launcher
     val permissionRequestLauncher = rememberLauncherForActivityResult(
@@ -57,7 +57,7 @@ fun LocationScreen(locationUtils: LocationUtils) {
     }
 
     // Dialogue control
-    var showPermissionDialog by remember { mutableStateOf(!locationUtils.hasLocationPermission()) }
+    var showPermissionDialog by remember { mutableStateOf(!locationManager.hasLocationPermission()) }
 
     if (showPermissionDialog) {
         PermissionInfoDialog(
@@ -93,22 +93,22 @@ fun LocationScreen(locationUtils: LocationUtils) {
 
     // Position Functions
     fun getPosition() {
-        locationUtils.getCurrentLocation { location ->
+        locationManager.getCurrentLocation { location ->
             currentLocation = location
-            currentAddress = locationUtils.reverseGeocodeLocation(location)
-            currentNeighborhood = locationUtils.getNeighborhood(location)
+            currentAddress = locationManager.reverseGeocodeLocation(location)
+            currentNeighborhood = locationManager.getNeighborhood(location)
         }
     }
 
     fun toggleTracking() {
         if (isTracking) {
-            locationUtils.stopLocationUpdates()
+            locationManager.stopLocationUpdates()
             isTracking = false
         } else {
-            locationUtils.startLocationUpdates {location ->
+            locationManager.startLocationUpdates { location ->
                 currentLocation = location
-                currentAddress = locationUtils.reverseGeocodeLocation(location)
-                currentNeighborhood = locationUtils.getNeighborhood(location)
+                currentAddress = locationManager.reverseGeocodeLocation(location)
+                currentNeighborhood = locationManager.getNeighborhood(location)
             }
             isTracking = true
         }
@@ -162,6 +162,6 @@ fun LocationScreen(locationUtils: LocationUtils) {
 @Composable
 private fun LocationScreenPreview() {
     LocationScreen(
-        locationUtils = LocationUtils(LocalContext.current)
+        locationManager = LocationManager(LocalContext.current)
     )
 }

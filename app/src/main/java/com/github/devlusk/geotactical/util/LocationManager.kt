@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Looper
 import androidx.core.content.ContextCompat
-import com.github.devlusk.geotactical.data.model.LocationData
+import com.github.devlusk.geotactical.data.model.UserLocation
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -16,7 +16,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import java.util.Locale
 
-class LocationUtils(val context: Context) {
+class LocationManager(val context: Context) {
 
     private val fusedLocationCliente: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
@@ -25,14 +25,14 @@ class LocationUtils(val context: Context) {
 
     // Get location once
     @SuppressLint("MissingPermission")
-    fun getCurrentLocation(onLocationReceived: (LocationData) -> Unit) {
+    fun getCurrentLocation(onLocationReceived: (UserLocation) -> Unit) {
         fusedLocationCliente.lastLocation.addOnSuccessListener { location ->
             location?.let {
-                val locationData = LocationData(
+                val userLocation = UserLocation(
                     latitude = it.latitude,
                     longitude = it.longitude
                 )
-                onLocationReceived(locationData)
+                onLocationReceived(userLocation)
             }
         }
     }
@@ -41,18 +41,18 @@ class LocationUtils(val context: Context) {
     @SuppressLint("MissingPermission")
     fun startLocationUpdates(
         intervalMs: Long = 1000,
-        onLocationUpdate: (LocationData) -> Unit
+        onLocationUpdate: (UserLocation) -> Unit
     ) {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 super.onLocationResult(result)
 
                 result.lastLocation?.let {
-                    val locationData = LocationData(
+                    val userLocation = UserLocation(
                         latitude = it.latitude,
                         longitude = it.longitude
                     )
-                    onLocationUpdate(locationData)
+                    onLocationUpdate(userLocation)
                 }
             }
         }
@@ -77,21 +77,21 @@ class LocationUtils(val context: Context) {
         }
     }
 
-    fun reverseGeocodeLocation(locationData: LocationData): String {
+    fun reverseGeocodeLocation(userLocation: UserLocation): String {
         val geocoder = Geocoder(context, Locale.getDefault())
         val addresses = geocoder.getFromLocation(
-            locationData.latitude,
-            locationData.longitude,
+            userLocation.latitude,
+            userLocation.longitude,
             1
         )
         return addresses?.firstOrNull()?.getAddressLine(0) ?: "Address not found"
     }
 
-    fun getNeighborhood(locationData: LocationData): String {
+    fun getNeighborhood(userLocation: UserLocation): String {
         val geocoder = Geocoder(context, Locale.getDefault())
         val addresses = geocoder.getFromLocation(
-            locationData.latitude,
-            locationData.longitude,
+            userLocation.latitude,
+            userLocation.longitude,
             1
         )
 

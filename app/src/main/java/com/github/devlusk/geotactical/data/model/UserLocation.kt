@@ -1,6 +1,6 @@
 package com.github.devlusk.geotactical.data.model
 
-data class LocationData(
+data class UserLocation(
     val latitude: Double,
     val longitude: Double
 )
