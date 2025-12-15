@@ -32,7 +32,6 @@ import com.github.devlusk.geotactical.util.LocationUtils
 
 @Composable
 fun LocationScreen(locationUtils: LocationUtils) {
-    val context = LocalContext.current
     var currentLocation by remember { mutableStateOf<LocationData?>(null) }
     var currentAddress by remember { mutableStateOf("-") }
     var currentNeighborhood by remember { mutableStateOf("") }

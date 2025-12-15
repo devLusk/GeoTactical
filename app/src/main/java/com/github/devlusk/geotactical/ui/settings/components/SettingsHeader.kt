@@ -1,4 +1,4 @@
-package com.github.devlusk.geotactical.ui.location.components
+package com.github.devlusk.geotactical.ui.settings.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.github.devlusk.geotactical.R
 
 @Composable
-fun LocationHeader(
-    onSettingsClick: () -> Unit
+fun SettingsHeader(
+    onGoBackClick: () -> Unit
 ) {
     Surface(
         shadowElevation = 3.dp,
@@ -36,16 +36,16 @@ fun LocationHeader(
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             Text(
-                text = "Quick Location",
+                text = "Settings",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
 
             IconButton(
-                onClick = onSettingsClick
+                onClick = onGoBackClick
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.settings_icon),
+                    painter = painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }
@@ -55,6 +55,6 @@ fun LocationHeader(
 
 @Preview(showBackground = true)
 @Composable
-private fun LocationHeaderPreview() {
-    LocationHeader({})
+private fun SettingsHeaderPreview() {
+    SettingsHeader({})
 }
