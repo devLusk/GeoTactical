@@ -1,4 +1,4 @@
-package com.github.devlusk.geotactical.screens.location.components
+package com.github.devlusk.geotactical.ui.location.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

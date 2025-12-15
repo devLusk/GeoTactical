@@ -1,4 +1,4 @@
-package com.github.devlusk.geotactical.screens.location
+package com.github.devlusk.geotactical.ui.location
 
 import android.Manifest
 import android.util.Log
@@ -20,15 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.devlusk.geotactical.data.location.LocationUtils
 import com.github.devlusk.geotactical.data.model.LocationData
-import com.github.devlusk.geotactical.screens.location.components.CurrentNeighborhood
-import com.github.devlusk.geotactical.screens.location.components.LocationDetails
-import com.github.devlusk.geotactical.screens.location.components.LocationHeader
-import com.github.devlusk.geotactical.screens.location.components.MapPlaceholder
 import com.github.devlusk.geotactical.screens.location.components.PermissionDeniedState
-import com.github.devlusk.geotactical.screens.location.components.PositionOptions
-import com.github.devlusk.geotactical.screens.permission.PermissionInfoDialog
+import com.github.devlusk.geotactical.ui.location.components.CurrentNeighborhood
+import com.github.devlusk.geotactical.ui.location.components.LocationDetails
+import com.github.devlusk.geotactical.ui.location.components.LocationHeader
+import com.github.devlusk.geotactical.ui.location.components.MapPlaceholder
+import com.github.devlusk.geotactical.ui.location.components.PositionOptions
+import com.github.devlusk.geotactical.ui.permission.PermissionInfoDialog
+import com.github.devlusk.geotactical.util.LocationUtils
 
 @Composable
 fun LocationScreen(locationUtils: LocationUtils) {
@@ -37,8 +37,6 @@ fun LocationScreen(locationUtils: LocationUtils) {
     var currentAddress by remember { mutableStateOf("-") }
     var currentNeighborhood by remember { mutableStateOf("") }
     var isTracking by remember { mutableStateOf(false) }
-
-
     var hasPermission by remember { mutableStateOf(locationUtils.hasLocationPermission()) }
 
     // Permissions launcher
@@ -96,7 +94,7 @@ fun LocationScreen(locationUtils: LocationUtils) {
 
     // Position Functions
     fun getPosition() {
-        locationUtils.getCurrentLocation {location ->
+        locationUtils.getCurrentLocation { location ->
             currentLocation = location
             currentAddress = locationUtils.reverseGeocodeLocation(location)
             currentNeighborhood = locationUtils.getNeighborhood(location)

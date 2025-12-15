@@ -1,4 +1,4 @@
-package com.github.devlusk.geotactical.screens.permission
+package com.github.devlusk.geotactical.ui.permission
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
